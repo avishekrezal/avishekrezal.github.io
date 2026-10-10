@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://avishekrezal.github.io/sitemap.xml

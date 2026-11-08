@@ -282,7 +282,10 @@
     
     h1 { font-family: var(--display); font-weight: 700; line-height: .95; letter-spacing: -.045em; margin-top: 1.15rem; }
     .hi { display: block; font: 600 clamp(1.15rem,4.6vw,1.7rem)/1.2 var(--display); letter-spacing: -.02em; color: color-mix(in srgb, var(--fg) 72%, var(--bg)); }
-    .name { display: block; margin-top: .3rem; font: 700 clamp(3.2rem,16vw,6.4rem)/1.05 var(--cinzel); letter-spacing: .01em; }
+    
+    /* Bug 2 Fix: Adjusted .name font-size clamp */
+    .name { display: block; margin-top: .3rem; font: 700 clamp(2.5rem, 14vw, 6.4rem)/1.05 var(--cinzel); letter-spacing: .01em; }
+    
     .role { display: block; margin-top: .8rem; min-height: 1.3em; font: 600 clamp(1.35rem,5.6vw,2.2rem)/1.2 var(--display); letter-spacing: -.03em; color: var(--fg); }
     .role b { margin-right: .3em; font-weight: 600; color: var(--muted); }
     
@@ -409,26 +412,35 @@
     .heart { width: 16px; height: 16px; flex: none; fill: var(--fg); transform-origin: center; animation: beat 1.5s ease-in-out infinite; }
     @keyframes beat { 0%,60%,to{transform:scale(1)}12%{transform:scale(1.3)}24%{transform:scale(1)}36%{transform:scale(1.2)} }
 
+    /* Bug 2 Fix: Small screen adjustments */
+    @media(max-width: 480px) {
+      .focus li {
+        flex-direction: column;
+        gap: .25rem;
+      }
+      .focus span {
+        text-align: left;
+      }
+    }
+
     @media(max-width: 899px) {
       .grid-lines { opacity: .28; }
       
-      /* Fix top gap & align from top */
       .hero-main {
-        display: block; /* Stops vertical centering */
+        display: block;
         padding-top: 0;
         padding-bottom: 2rem;
       }
       
       .hero-grid {
-        gap: 1.5rem; /* Reduce gap between image and text */
+        gap: 1.5rem;
       }
       
-      /* Mobile Edge-to-Edge and Seamless Blur Setup */
+      /* Bug 1 Fix: Edge-to-edge without overflow */
       .portrait {
-        width: 100vw;
-        max-width: 100vw;
-        margin-left: calc(50% - 50vw);
-        margin-right: calc(50% - 50vw);
+        width: calc(100% + 2 * var(--gutter));
+        max-width: none;
+        margin-inline: calc(-1 * var(--gutter));
         margin-top: 0;
         margin-bottom: 1rem;
         border-radius: 0;
@@ -436,13 +448,11 @@
         transform-style: flat;
       }
       
-      /* Use mask-image directly on image for flawless blending */
       .portrait img {
         -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
         mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
       }
 
-      /* Fix button sizing on mobile */
       .cta {
         margin-top: 1.5rem;
         gap: .5rem;
@@ -452,7 +462,7 @@
         min-height: 44px;
         padding: 0 1.25rem;
         font-size: .9rem;
-        flex: 0 1 auto; /* Prevent stretching */
+        flex: 0 1 auto;
       }
 
       .tile {
@@ -465,7 +475,13 @@
       :root { --gutter: 2rem; }
       .foot { grid-template-columns: 1fr auto 1fr; }
       .foot .made { grid-column: auto; order: 0; }
-      .work-grid { grid-template-columns: repeat(2,1fr); padding-bottom: 5rem; }
+      
+      /* Bug 3 Fix: Increased work-grid padding-bottom for staggered columns */
+      .work-grid { 
+        grid-template-columns: repeat(2,1fr); 
+        padding-bottom: 6.5rem; 
+      }
+      
       .work-grid li:nth-child(2n) { transform: translateY(5rem); }
       .about { grid-template-columns: 1fr 1.8fr; gap: 3rem; }
       .cta .btn, .contact .cta .btn { flex: 0 1 auto; }
@@ -657,7 +673,8 @@
       </div>
     </section>
 
-    <section class="section" id="about" style="padding-top:0">
+    <!-- Bug 3 Fix: Removed inline style="padding-top:0" -->
+    <section class="section" id="about">
       <div class="orb o-about" aria-hidden="true"></div>
       <div class="wrap about">
         <h2>About</h2>
@@ -794,9 +811,12 @@
       
       c ? document.querySelector(".caret").hidden = !0 : (I.textContent = "", setTimeout(p, 600));
 
-      // Scroll Animations for Portrait (Scale on mobile, Parallax on desktop)
+      // Bug 4 Fix: GSAP matchMedia for responsive scroll animations
       if (k && !c) {
-        if (window.matchMedia("(max-width: 899px)").matches) {
+        let mm = gsap.matchMedia();
+
+        // Mobile: Scale animation
+        mm.add("(max-width: 899px)", () => {
           gsap.fromTo(".portrait img", 
             { scale: 1.15 }, 
             { 
@@ -810,13 +830,21 @@
               } 
             }
           );
-        } else {
+        });
+
+        // Desktop: Parallax animation
+        mm.add("(min-width: 900px)", () => {
           gsap.to(".portrait img", {
-            yPercent: -4,
-            ease: "none",
-            scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
+            yPercent: -4, 
+            ease: "none", 
+            scrollTrigger: { 
+              trigger: ".hero", 
+              start: "top top", 
+              end: "bottom top", 
+              scrub: true 
+            }
           });
-        }
+        });
       }
 
       // 3D Tilt Effect for Desktop only
@@ -829,7 +857,6 @@
         const setScale = gsap.quickTo(portrait, "scale", { duration: 0.5, ease: "power2.out" });
 
         portrait.addEventListener('mousemove', (e) => {
-          // Failsafe: If user resizes window below 900px, disable effect dynamically
           if (window.innerWidth < 900) return;
           
           const rect = portrait.getBoundingClientRect();

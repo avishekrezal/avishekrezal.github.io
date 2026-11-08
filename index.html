@@ -438,7 +438,7 @@
       margin-top: 0; 
       color: var(--muted); 
       font-size: 1.05rem; 
-      text-align: justify;
+      text-align: left; /* Fixed: Changed from justify to left for mobile readability */
       line-height: 1.8;
       display: grid;
       gap: 1rem;
@@ -578,6 +578,11 @@
       /* Pull About section up on PC */
       #about {
         padding-top: 2rem;
+      }
+
+      /* Restore justified text only on desktop */
+      .about-body {
+        text-align: justify;
       }
     }
 

@@ -128,16 +128,66 @@
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
     }
 
-    .progress {
+    /* Preloader Styles */
+    .preloader {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      z-index: 60;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg);
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    
+    .preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
+    .loader-img {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--line-strong);
+    }
+    
+    .loader-text {
+      font: 700 1.3rem/1 var(--display);
+      color: var(--fg);
+      letter-spacing: -0.02em;
+    }
+    
+    .loader-bar-container {
+      width: 140px;
+      height: 3px;
+      background: var(--line);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 0.2rem;
+    }
+    
+    .loader-bar {
+      height: 100%;
+      width: 0%;
       background: var(--fg);
-      transform: scaleX(0);
-      transform-origin: 0 50%;
+      border-radius: 2px;
+      animation: fillBar 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    @keyframes fillBar {
+      0% { width: 0%; }
+      50% { width: 60%; }
+      100% { width: 100%; }
     }
 
     .grid-lines {
@@ -390,6 +440,8 @@
       font-size: 1.05rem; 
       text-align: justify;
       line-height: 1.8;
+      display: grid;
+      gap: 1rem;
     }
     
     .focus { list-style: none; margin-top: 2rem; border-top: 1px solid var(--line); }
@@ -548,7 +600,17 @@
 </head>
 
 <body>
-  <div class="progress" id="progress" aria-hidden="true"></div>
+  <!-- Preloader -->
+  <div id="preloader" class="preloader">
+    <div class="loader-content">
+      <img src="profile.webp" alt="Avishek" class="loader-img">
+      <div class="loader-text">Avishek</div>
+      <div class="loader-bar-container">
+        <div class="loader-bar"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="grid-lines" aria-hidden="true"></div>
 
   <header class="nav">
@@ -696,7 +758,9 @@
         <h2>About</h2>
         <div>
           <div class="about-body">
-            <p>A BBA student working where technology, business and storytelling overlap. Outside of class, I spend my time on cinematography and color grading, turning raw footage into engaging visual stories. Recently, I’ve started web development. This portfolio is a live workspace where I practice web development.</p>
+            <p>Hi, I’m Avishek (often known as Yubraj)—a BBA student majoring in Finance with a strong passion for tech, visual media, and continuous learning.</p>
+            <p>My academic focus gives me a solid foundation in financial analysis, but my curiosity extends far beyond the textbook. In my free time, I’m naturally drawn to exploring how things work—from following global tech trends and understanding new tools to experimenting with hands-on projects. Beyond business and technology, I have a deep creative side focused on videography, color grading, and editing travel videos, often with a great soundtrack playing in the background.</p>
+            <p>Driven by an acquired taste for detail and clean execution, I enjoy blending analytical thinking with creative production. I’m always open to new ideas, creative collaborations, and professional connections. Feel free to explore my work or get in touch!</p>
           </div>
           
           <ul class="focus">
@@ -742,6 +806,17 @@
           l = null,
           T = document.getElementById("theme"),
           R = document.querySelector("meta[name=theme-color]");
+
+      // Preloader Hide Logic
+      window.addEventListener('load', function() {
+        var preloader = document.getElementById('preloader');
+        if (preloader) {
+          // Slight delay to allow the CSS animation to finish smoothly
+          setTimeout(function() {
+            preloader.classList.add('hidden');
+          }, 800); 
+        }
+      });
 
       // Theme Toggle
       function m(e) {
@@ -906,18 +981,6 @@
         }, { threshold: .15 });
         M.forEach(function(e) { C.observe(e); });
       } else M.forEach(function(e) { e.classList.add("in"); });
-
-      // Scroll Progress Bar
-      var V = document.getElementById("progress"), L = !1;
-      function B() {
-        L = !1;
-        var e = a.scrollHeight - innerHeight;
-        V.style.transform = "scaleX(" + (e > 0 ? scrollY / e : 0) + ")";
-      }
-      addEventListener("scroll", function() {
-        L || (L = !0, requestAnimationFrame(B));
-      }, { passive: true });
-      B();
     });
   </script>
 </body>

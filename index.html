@@ -430,44 +430,52 @@
       }
       
       .hero-grid {
-        gap: 1rem;
+        gap: 0;
       }
       
-      /* Mobile Compact Portrait - Fits better on the first screen */
+      /* Fixed Mobile Portrait */
       .portrait {
         width: calc(100% + 2 * var(--gutter));
         max-width: none;
         margin-inline: calc(-1 * var(--gutter));
         margin-top: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
         border-radius: 0;
         box-shadow: none;
         transform-style: flat;
-        aspect-ratio: auto;
-        height: 50vh; /* Limits height so text moves up */
+        height: 48vh; 
       }
       
+      /* Pure, smooth mist fade with NO backdrop-filter artifacts */
       .portrait img {
         height: 100%;
         width: 100%;
         object-fit: cover;
         object-position: center 20%;
-        -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
-        mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
       }
 
-      /* Reduced font sizes and margins for mobile */
-      h1 { margin-top: 0.5rem; }
-      .hi { font-size: 1rem; }
-      .name { font-size: clamp(2.2rem, 12vw, 3.5rem); }
-      .role { font-size: clamp(1.1rem, 4.5vw, 1.5rem); margin-top: 0.4rem; }
-      .bio { font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.5; }
-      .cta { margin-top: 1rem; gap: 0.5rem; }
+      /* Pull the text up into the smooth fade */
+      .hero-copy {
+        margin-top: -3.5rem; 
+        position: relative;
+        z-index: 3; 
+      }
+
+      h1 { margin-top: 0; }
+      .hi { font-size: 0.95rem; }
+      .name { font-size: clamp(2.2rem, 12vw, 3.5rem); margin-top: 0.1rem; }
+      .role { font-size: clamp(1.1rem, 4.5vw, 1.5rem); margin-top: 0.25rem; }
+      .bio { font-size: 0.9rem; margin-top: 0.4rem; line-height: 1.45; }
+      
+      .cta { margin-top: 0.8rem; gap: 0.5rem; }
       .cta .btn { min-height: 40px; padding: 0 1rem; font-size: 0.85rem; }
-      .hero-meta { margin-top: 1.25rem; gap: 1rem 2rem; }
-      .meta-label { margin-bottom: 0.5rem; font-size: 0.65rem; }
-      .tile { width: 40px; height: 40px; }
-      .tile .ico { width: 18px; height: 18px; }
+      
+      .hero-meta { margin-top: 1rem; gap: 1rem 2rem; }
+      .meta-label { margin-bottom: 0.4rem; font-size: 0.6rem; }
+      .tile { width: 38px; height: 38px; border-radius: 10px; }
+      .tile .ico { width: 16px; height: 16px; }
     }
 
     @media(min-width: 640px) {
@@ -614,7 +622,6 @@
       <div class="orb o-work" aria-hidden="true"></div>
       <div class="wrap">
         <div class="head">
-          <!-- Renamed to Projects -->
           <h2 class="fade">Projects</h2>
           <p class="lede fade">Cinematography, color grading, and video editing. Click any project to view on Google Drive.</p>
         </div>
@@ -808,10 +815,10 @@
       if (k && !c) {
         let mm = gsap.matchMedia();
 
-        // Mobile: Scale animation
+        // Mobile: Slight scale animation for motion effect
         mm.add("(max-width: 899px)", () => {
           gsap.fromTo(".portrait img", 
-            { scale: 1.15 }, 
+            { scale: 1.05 }, 
             { 
               scale: 1, 
               ease: "none", 

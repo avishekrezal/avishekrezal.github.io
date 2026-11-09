@@ -155,7 +155,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 1px solid var(--line-strong);
-      background-color: var(--surface); /* Fallback */
+      background-color: var(--surface); 
     }
     
     .loader-text {
@@ -272,12 +272,15 @@
       }
       .menu.open { clip-path: inset(0); visibility: visible; transition: clip-path .5s cubic-bezier(.65,0,.35,1), visibility 0s; }
       .menu a { padding: 1rem 0; border-bottom: 1px solid var(--line); color: var(--fg); font-weight: 500; opacity: 0; transform: translateY(-10px); transition: opacity .2s ease, transform .25s ease; }
-      .menu a:nth-child(2) { transition-delay: .04s; }
-      .menu a:nth-child(1) { transition-delay: .08s; }
+      .menu a:nth-child(1) { transition-delay: .04s; }
+      .menu a:nth-child(2) { transition-delay: .08s; }
+      .menu a:nth-child(3) { transition-delay: .12s; }
+      .menu a:nth-child(4) { transition-delay: .16s; }
       .menu.open a { opacity: 1; transform: none; transition: opacity .35s ease, transform .45s cubic-bezier(.2,.7,.2,1); }
       .menu.open a:nth-child(1) { transition-delay: .14s; }
-      .menu.open a:nth-child(2) { transition-delay: .2s; }
-      .menu.open a:nth-child(3) { transition-delay: .26s; }
+      .menu.open a:nth-child(2) { transition-delay: .18s; }
+      .menu.open a:nth-child(3) { transition-delay: .22s; }
+      .menu.open a:nth-child(4) { transition-delay: .26s; }
     }
 
     .icon-btn {
@@ -355,15 +358,21 @@
                   color 0.3s ease, 
                   border-color 0.3s ease,
                   box-shadow 0.3s ease;
+      cursor: pointer;
     }
     
     .tile .ico { width: 20px; height: 20px; }
     
-    a.tile:hover { 
+    /* Base Hover for ALL tiles (Lift + Invert) */
+    .tile:hover { 
       transform: translateY(-3px); 
       background: var(--fg); 
       color: var(--bg); 
       border-color: var(--fg);
+    }
+    
+    /* Glow Effect ONLY for links (Redirecting icons) */
+    a.tile:hover {
       box-shadow: 0 8px 16px color-mix(in srgb, var(--fg) 15%, transparent);
     }
     
@@ -396,17 +405,63 @@
     }
     
     .portrait img {
-      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transform: scale(1.15); 
     }
 
-    .ticker { overflow: hidden; border-top: 1px solid var(--line); padding-block: 1rem; position: relative; z-index: 2; }
-    .track { display: flex; width: max-content; animation: slide 40s linear infinite; }
-    .track span { display: flex; align-items: center; font: 500 1rem/1 var(--display); letter-spacing: -.01em; color: var(--muted); white-space: nowrap; }
-    .track span:after { content: ""; width: 5px; height: 5px; margin-inline: 1.4rem; border-radius: 50%; background: var(--line-strong); }
-    @keyframes slide { to { transform: translate(-50%); } }
+    /* Fixed & Robust Ticker Styles */
+    .ticker { 
+      overflow: hidden; 
+      border-top: 1px solid var(--line); 
+      padding-block: 1rem; 
+      position: relative; 
+      z-index: 2; 
+      display: flex;
+    }
+    
+    .track { 
+      display: flex; 
+      width: max-content; 
+      animation: slide 40s linear infinite; 
+      will-change: transform;
+    }
+    
+    .ticker:hover .track {
+      animation-play-state: paused;
+    }
+    
+    .ticker-group {
+      display: flex;
+      flex-shrink: 0;
+    }
+    
+    .ticker-group span { 
+      display: flex; 
+      align-items: center; 
+      font: 500 1rem/1 var(--display); 
+      letter-spacing: -.01em; 
+      color: var(--muted); 
+      white-space: nowrap; 
+      flex-shrink: 0;
+    }
+    
+    .ticker-group span:after { 
+      content: ""; 
+      width: 5px; 
+      height: 5px; 
+      margin-inline: 1.4rem; 
+      border-radius: 50%; 
+      background: var(--line-strong); 
+    }
+    
+    @keyframes slide { 
+      to { transform: translateX(-50%); } 
+    }
 
     .section { position: relative; overflow-x: clip; padding-block: clamp(4rem,10vw,8rem); }
     .head { display: flex; flex-direction: column; gap: .9rem; margin-bottom: 2.25rem; }
@@ -435,6 +490,7 @@
     .go { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 1px solid var(--line-strong); display: grid; place-items: center; transition: background .25s, color .25s, border-color .25s; }
     .piece:hover .go, .piece:focus-visible .go { background: var(--fg); border-color: var(--fg); color: var(--bg); }
 
+    /* About Section */
     .about { display: grid; gap: 1.5rem; border-top: 1px solid var(--line); padding-top: clamp(3rem,6vw,5rem); }
     
     .about-body { 
@@ -448,9 +504,80 @@
       gap: 1rem;
     }
     
-    .focus { list-style: none; margin-top: 2rem; border-top: 1px solid var(--line); }
-    .focus li { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); font-weight: 500; }
-    .focus span { color: var(--muted); font-weight: 400; text-align: right; }
+    /* Inverted Skills Section (Right-Aligned block) */
+    .skills-wrapper { 
+      border-top: 1px solid var(--line); 
+      padding-top: clamp(3rem,6vw,5rem); 
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; 
+    }
+
+    .skills-header {
+      width: 100%;
+      text-align: right; 
+      margin-bottom: 3rem; 
+    }
+    
+    .skills-block {
+      width: 100%;
+      max-width: 700px; 
+    }
+
+    .skills-list {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 2rem;
+    }
+
+    /* Vertical line separating text and icons */
+    .skills-list::before {
+      content: '';
+      position: absolute;
+      right: 80px; 
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--line);
+    }
+    
+    .skills-list li { 
+      display: grid;
+      grid-template-columns: 1fr 48px; 
+      gap: 4rem; 
+      align-items: start; 
+    }
+    
+    .skill-info { 
+      text-align: right; 
+      padding-right: 1rem; 
+    }
+    
+    .skill-info strong { 
+      display: block;
+      font-weight: 600; 
+      color: var(--fg); 
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      margin-top: -0.2rem; 
+    }
+    
+    .skill-info span { 
+      color: var(--muted); 
+      font-size: 0.95rem;
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .skill-icon { 
+      width: 48px;
+      display: flex;
+      justify-content: center;
+    }
 
     .contact { border-top: 1px solid var(--line); overflow: clip; }
     .contact h2 { font-weight: 700; font-size: clamp(2.8rem,12vw,7.5rem); line-height: .94; letter-spacing: -.05em; }
@@ -464,17 +591,6 @@
     .foot a { justify-self: end; }
     .heart { width: 16px; height: 16px; flex: none; fill: var(--fg); transform-origin: center; animation: beat 1.5s ease-in-out infinite; }
     @keyframes beat { 0%,60%,to{transform:scale(1)}12%{transform:scale(1.3)}24%{transform:scale(1)}36%{transform:scale(1.2)} }
-
-    /* Small screen adjustments */
-    @media(max-width: 480px) {
-      .focus li {
-        flex-direction: column;
-        gap: .25rem;
-      }
-      .focus span {
-        text-align: left;
-      }
-    }
 
     @media(max-width: 899px) {
       .grid-lines { opacity: .28; }
@@ -505,12 +621,14 @@
       }
       
       .portrait img {
+        position: static;
         height: 100%;
         width: 100%;
         object-fit: cover;
         object-position: center 15%;
         -webkit-mask-image: none;
         mask-image: none;
+        transform: none; 
       }
 
       .hero-copy {
@@ -536,15 +654,51 @@
       .tile { width: 38px; height: 38px; border-radius: 10px; }
       .tile .ico { width: 16px; height: 16px; }
 
-      /* Fix for the line below Web Development on mobile */
-      .focus li:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-      
       /* Push About section up on mobile */
       #work { padding-bottom: 3rem; }
       #about { padding-top: 1rem; }
+      #skills { padding-top: 1rem; }
+
+      /* Mobile Skills Layout - Use same structure as desktop */
+      .skills-wrapper {
+        align-items: flex-end; 
+      }
+      .skills-header {
+        text-align: right;
+        margin-bottom: 2rem;
+      }
+      .skills-block {
+        max-width: 100%;
+      }
+      .skills-list::before { 
+        display: block; 
+        right: 64px; 
+      }
+      .skills-list li {
+        display: grid; 
+        grid-template-columns: 1fr 38px; 
+        gap: 2rem; 
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .skills-list li:last-child {
+        border-bottom: none;
+      }
+      .skill-info {
+        text-align: right; 
+        padding-right: 0.5rem;
+      }
+      .skill-info strong { margin-top: -0.1rem; } 
+      .skill-icon {
+        width: 38px; 
+        justify-content: center;
+      }
+      /* Ensure the mobile skill tiles use the default span styling */
+      .skill-icon .tile {
+        width: 38px;
+        height: 38px;
+      }
+      .skill-icon .tile .ico { width: 16px; height: 16px; }
     }
 
     @media(min-width: 640px) {
@@ -571,15 +725,12 @@
       .head { flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 2rem; }
       .head .lede { text-align: right; }
       
-      /* Pull About section up on PC */
-      #about {
-        padding-top: 2rem;
-      }
+      /* Pull sections up on PC */
+      #about { padding-top: 2rem; }
+      #skills { padding-top: 2rem; }
 
       /* Restore justified text only on desktop */
-      .about-body {
-        text-align: justify;
-      }
+      .about-body { text-align: justify; }
     }
 
     @media(prefers-reduced-motion: reduce) {
@@ -620,8 +771,9 @@
     <div class="wrap">
       <a href="#top" class="logo">A</a>
       <nav class="menu" id="menu" aria-label="Main">
-        <a href="#work">Work</a>
+        <a href="#work">Projects</a>
         <a href="#about">About</a>
+        <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </nav>
       <button class="icon-btn" id="theme" type="button" aria-label="Switch to light theme">
@@ -688,12 +840,19 @@
         </div>
       </div>
       
+      <!-- Robust Ticker -->
       <div class="ticker" aria-hidden="true">
         <div class="track">
-          <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
-          <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
-          <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
-          <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
+          <!-- Group 1 -->
+          <div class="ticker-group">
+            <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
+            <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
+          </div>
+          <!-- Group 2 (Identical for seamless loop) -->
+          <div class="ticker-group">
+            <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
+            <span>Cinematography</span><span>Color grading</span><span>Editing</span><span>Web development</span>
+          </div>
         </div>
       </div>
     </section>
@@ -763,11 +922,60 @@
             <p>Creativity is another side of what I do. I'm passionate about videography, cinematography, and color grading, with a particular appreciation for visual details, atmosphere, and storytelling through music and imagery. I enjoy experimenting with different styles and refining the little details that make a piece of work feel complete.</p>
             <p>I believe there's a lot to explore at the intersection of business, technology, and creativity. I'm still learning, experimenting, and figuring things out, but I enjoy the process of building skills and bringing ideas to life. Always open to meaningful conversations, creative collaborations, and new opportunities.</p>
           </div>
-          
-          <ul class="focus">
-            <li>Cinematography <span>Filming</span></li>
-            <li>Color grading <span>Films & Reels (or DaVinci Resolve / Video Projects)</span></li>
-            <li>Web development <span>HTML, CSS & JavaScript</span></li>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inverted Skills Section -->
+    <section class="section" id="skills">
+      <div class="wrap skills-wrapper">
+        <h2 class="skills-header">Skills</h2>
+        <div class="skills-block">
+          <ul class="skills-list">
+            <li>
+              <div class="skill-info">
+                <strong>Cinematography</strong>
+                <span>Filming</span>
+              </div>
+              <div class="skill-icon">
+                <span class="tile" role="img" aria-label="Cinematography">
+                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                </span>
+              </div>
+            </li>
+            <li>
+              <div class="skill-info">
+                <strong>Color grading</strong>
+                <span>Films & Reels (or DaVinci Resolve / Video Projects)</span>
+              </div>
+              <div class="skill-icon">
+                <span class="tile" role="img" aria-label="Color grading">
+                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
+                </span>
+              </div>
+            </li>
+            <li>
+              <div class="skill-info">
+                <strong>Editing</strong>
+                <span>Video Editing & Post-Production</span>
+              </div>
+              <div class="skill-icon">
+                <span class="tile" role="img" aria-label="Editing">
+                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8 7.5 20 17M8 16.5 20 7"/></svg>
+                </span>
+              </div>
+            </li>
+            <li>
+              <div class="skill-info">
+                <strong>Web development</strong>
+                <span>HTML, CSS & JavaScript</span>
+              </div>
+              <div class="skill-icon">
+                <span class="tile" role="img" aria-label="Web development">
+                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></svg>
+                </span>
+              </div>
+            </li>
           </ul>
         </div>
       </div>

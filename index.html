@@ -59,8 +59,6 @@
       --grid: rgba(255,255,255,.075);
       --glow: rgba(255,255,255,.4);
       --grain: .06;
-      --orb-a: rgba(255,255,255,.26);
-      --orb-b: rgba(255,255,255,.07);
       --veil: rgba(10,10,10,.62);
       --tile-bg: rgba(255,255,255,.05);
       --tile-shadow: 0 10px 24px -12px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.06);
@@ -83,8 +81,6 @@
       --grid: rgba(0,0,0,.07);
       --glow: transparent;
       --grain: .05;
-      --orb-a: rgba(0,0,0,.11);
-      --orb-b: rgba(0,0,0,.03);
       --veil: rgba(244,244,242,.8);
       --tile-bg: linear-gradient(145deg,#fff,#eceff2);
       --tile-shadow: 6px 8px 18px rgba(20,30,50,.12), -4px -4px 12px rgba(255,255,255,.9);
@@ -159,6 +155,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 1px solid var(--line-strong);
+      background-color: var(--surface); /* Fallback */
     }
     
     .loader-text {
@@ -202,23 +199,7 @@
       mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, #000 30%, transparent 100%);
     }
 
-    .orb {
-      position: absolute;
-      z-index: -2;
-      pointer-events: none;
-      width: var(--s);
-      height: var(--s);
-      background: radial-gradient(closest-side, var(--orb-a) 0, var(--orb-b) 48%, transparent 100%);
-      animation: float 22s ease-in-out infinite alternate;
-    }
-    
-    @keyframes float { to { transform: translate3d(2.5%,4%,0) scale(1.06); } }
-    
-    .o-hero { --s: min(120vw, 520px); left: 50%; top: -6%; translate: -50% 0; }
-    .o-work { --s: min(120vw, 520px); left: -60vw; top: 22%; }
-    .o-about { --s: min(120vw, 520px); right: -60vw; top: -14%; }
-    .o-contact { --s: min(190vw, 900px); left: 50%; bottom: calc(var(--s) / -2 - 10px); translate: -50% 0; }
-
+    /* Polished Buttons & Hover Effects */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -233,13 +214,20 @@
       cursor: pointer;
       background: none;
       color: var(--fg);
-      transition: background .25s, color .25s, border-color .25s;
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px color-mix(in srgb, var(--fg) 15%, transparent);
     }
     
     .btn-primary { background: var(--fg); color: var(--bg); }
-    .btn-primary:hover { background: transparent; color: var(--fg); }
+    .btn-primary:hover { background: color-mix(in srgb, var(--fg) 90%, transparent); color: var(--bg); }
+    
     .btn-ghost { border-color: var(--line-strong); }
     .btn-ghost:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    
     .ico { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
     .nav {
@@ -263,7 +251,7 @@
     }
     
     .menu { display: flex; gap: 2rem; margin-right: 1rem; }
-    .menu a { color: var(--muted); text-decoration: none; font-size: .95rem; transition: color .2s; }
+    .menu a { color: var(--muted); text-decoration: none; font-size: .95rem; transition: color 0.3s ease; }
     .menu a:hover { color: var(--fg); }
 
     @media(max-width: 899px) {
@@ -302,10 +290,14 @@
       background: none;
       color: var(--fg);
       cursor: pointer;
-      transition: background .2s;
+      transition: background 0.3s ease, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
     
-    .icon-btn:hover { background: var(--hover); }
+    .icon-btn:hover { 
+      background: var(--hover); 
+      transform: translateY(-1px);
+    }
+    
     .sun { display: none; }
     [data-theme=light] .sun { display: block; }
     [data-theme=light] .moon { display: none; }
@@ -326,7 +318,7 @@
       flex-direction: column;
     }
     
-    .hero-main { position: relative; flex: 1; display: flex; align-items: center; padding-block: 2.25rem 3rem; }
+    .hero-main { position: relative; flex: 1; display: flex; align-items: center; padding-block: 2.25rem 3rem; z-index: 2; }
     .hero-grid { display: grid; gap: 2.75rem; }
     .hero-copy { position: relative; z-index: 2; }
     
@@ -358,11 +350,22 @@
       background: var(--tile-bg);
       border: 1px solid var(--line);
       box-shadow: var(--tile-shadow);
-      transition: transform .25s ease, background-color .25s ease, color .25s ease, border-color .25s ease;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                  background-color 0.3s ease, 
+                  color 0.3s ease, 
+                  border-color 0.3s ease,
+                  box-shadow 0.3s ease;
     }
     
     .tile .ico { width: 20px; height: 20px; }
-    a.tile:hover { transform: translateY(-3px); background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    
+    a.tile:hover { 
+      transform: translateY(-3px); 
+      background: var(--fg); 
+      color: var(--bg); 
+      border-color: var(--fg);
+      box-shadow: 0 8px 16px color-mix(in srgb, var(--fg) 15%, transparent);
+    }
     
     .hero-copy>* { animation: rise 1s cubic-bezier(.16,1,.3,1) both; }
     .hero-copy>:nth-child(1) { animation-delay: .08s; }
@@ -399,7 +402,7 @@
       object-fit: cover;
     }
 
-    .ticker { overflow: hidden; border-top: 1px solid var(--line); padding-block: 1rem; position: relative; }
+    .ticker { overflow: hidden; border-top: 1px solid var(--line); padding-block: 1rem; position: relative; z-index: 2; }
     .track { display: flex; width: max-content; animation: slide 40s linear infinite; }
     .track span { display: flex; align-items: center; font: 500 1rem/1 var(--display); letter-spacing: -.01em; color: var(--muted); white-space: nowrap; }
     .track span:after { content: ""; width: 5px; height: 5px; margin-inline: 1.4rem; border-radius: 50%; background: var(--line-strong); }
@@ -413,7 +416,8 @@
     .work-grid { list-style: none; display: grid; gap: 2.5rem 2rem; }
     .piece { display: block; text-decoration: none; }
     .piece figure { position: relative; overflow: hidden; border-radius: 8px; background: var(--surface); aspect-ratio: 1/1; }
-    .piece img { width: 100%; height: 100%; object-fit: cover; }
+    .piece img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+    .piece:hover img { transform: scale(1.05); }
     
     .js .fade { opacity: 0; transition: opacity .9s ease; }
     .js .fade.in { opacity: 1; }
@@ -438,7 +442,7 @@
       margin-top: 0; 
       color: var(--muted); 
       font-size: 1.05rem; 
-      text-align: left; /* Fixed: Changed from justify to left for mobile readability */
+      text-align: left; 
       line-height: 1.8;
       display: grid;
       gap: 1rem;
@@ -553,10 +557,6 @@
       .cta .btn, .contact .cta .btn { flex: 0 1 auto; }
       .contact .cta .btn { min-height: 50px; padding: 0 1.7rem; border-radius: 999px; }
       .portrait { width: min(100%, 440px); }
-      .o-hero { --s: 620px; }
-      .o-work { --s: 640px; left: -300px; }
-      .o-about { --s: 640px; right: -300px; }
-      .o-contact { --s: 1000px; }
     }
 
     @media(min-width: 900px) {
@@ -570,10 +570,6 @@
       .role { font-size: clamp(1.7rem,2.9vw,2.6rem); }
       .head { flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 2rem; }
       .head .lede { text-align: right; }
-      .o-hero { --s: 820px; left: auto; right: -8vw; top: 50%; translate: 0 -50%; }
-      .o-work { --s: 760px; left: -340px; top: 26%; }
-      .o-about { --s: 760px; right: -340px; top: -22%; }
-      .o-contact { --s: 1200px; }
       
       /* Pull About section up on PC */
       #about {
@@ -610,7 +606,7 @@
   <!-- Preloader -->
   <div id="preloader" class="preloader">
     <div class="loader-content">
-      <img src="profile.webp" alt="Avishek" class="loader-img">
+      <img src="profile.webp" alt="Avishek" class="loader-img" fetchpriority="high">
       <div class="loader-text">Avishek</div>
       <div class="loader-bar-container">
         <div class="loader-bar"></div>
@@ -640,7 +636,6 @@
 
   <main id="top">
     <section class="hero">
-      <div class="orb o-hero" aria-hidden="true"></div>
       <div class="hero-main">
         <div class="wrap hero-grid">
           <div class="hero-copy">
@@ -704,7 +699,6 @@
     </section>
 
     <section class="section" id="work">
-      <div class="orb o-work" aria-hidden="true"></div>
       <div class="wrap">
         <div class="head">
           <h2 class="fade">Projects</h2>
@@ -760,7 +754,6 @@
     </section>
 
     <section class="section" id="about">
-      <div class="orb o-about" aria-hidden="true"></div>
       <div class="wrap about">
         <h2>About</h2>
         <div>
@@ -781,7 +774,6 @@
     </section>
 
     <section class="section contact" id="contact">
-      <div class="orb o-contact" aria-hidden="true"></div>
       <div class="wrap">
         <h2>Let's work together.</h2>
         <p class="lede">Have a project in mind or want to collaborate on something cinematic? Send me a message.</p>
